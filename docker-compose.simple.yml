@@ -1,0 +1,15 @@
+services:
+  assistant-simple:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    image: multimodal-assistant:simple
+    container_name: multimodal-assistant-simple
+
+    env_file:
+      - path: .env
+        required: false
+
+    restart: "no"
+    stdin_open: true
+    tty: true

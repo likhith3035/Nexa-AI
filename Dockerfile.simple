@@ -1,0 +1,25 @@
+# ── Simple test version without heavy ML dependencies ──────────────────
+FROM python:3.11-slim-bookworm
+
+# Basic system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Install only core dependencies for testing
+RUN pip install --no-cache-dir \
+    python-dotenv \
+    anthropic \
+    requests \
+    beautifulsoup4 \
+    aiohttp \
+    pytest \
+    pytest-asyncio
+
+# Copy source
+COPY . .
+
+# Test command - just import and validate config
+CMD ["python", "-c", "from config import settings; print(f'Config loaded: {settings.log_level}')"]

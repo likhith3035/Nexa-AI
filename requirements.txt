@@ -1,0 +1,31 @@
+# Core
+python-dotenv>=1.0.0
+
+# Gesture detection
+opencv-python>=4.8.0
+mediapipe>=0.10.0
+
+# Speech recognition
+PyAudio>=0.2.13
+openai-whisper>=20231117
+
+# LLM (Claude API)
+anthropic>=0.25.0
+
+# Browser & desktop automation
+playwright>=1.40.0
+pyautogui>=0.9.54
+
+# Web crawling
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+
+# Text-to-speech
+pyttsx3>=2.90
+
+# Async utilities
+aiohttp>=3.9.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.23.0

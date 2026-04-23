@@ -1,0 +1,46 @@
+services:
+  assistant:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: multimodal-assistant:latest
+    container_name: multimodal-assistant
+
+    # ── Environment ──────────────────────────────────────────────────────
+    env_file:
+      - path: .env
+        required: false
+
+    # ── Hardware device passthrough ──────────────────────────────────────
+    # Camera access (Linux: /dev/video0, adjust index to match GESTURE_CAMERA_INDEX)
+    devices:
+      - /dev/video0:/dev/video0   # webcam
+
+    # ── Audio (ALSA / PulseAudio) ────────────────────────────────────────
+    # Passes the host sound system into the container.
+    # For PulseAudio, mount the socket; for ALSA, share /dev/snd.
+    volumes:
+      - /dev/snd:/dev/snd                          # ALSA devices
+      - /run/user/1000/pulse:/run/user/1000/pulse  # PulseAudio socket (adjust UID if needed)
+      - /etc/asound.conf:/etc/asound.conf:ro        # ALSA config (optional)
+
+    # Required for audio/video device access
+    privileged: false
+    group_add:
+      - audio
+      - video
+
+    # ── Display (needed by pyautogui / any GUI fallback) ─────────────────
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+      - PULSE_SERVER=unix:/run/user/1000/pulse/native
+
+    # Share host X11 socket if desktop automation is needed
+    # Comment out if running headless only.
+    # volumes (appended via YAML merge isn't supported; listed above):
+    #   - /tmp/.X11-unix:/tmp/.X11-unix:ro
+
+    restart: unless-stopped
+
+    stdin_open: true
+    tty: true
